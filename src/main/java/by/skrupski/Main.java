@@ -8,6 +8,8 @@ import by.skrupski.model.Person;
 import by.skrupski.util.Util;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Comparator;
 import java.util.List;
 
@@ -134,7 +136,13 @@ public class Main {
 
     private static void task12() throws IOException {
         List<Person> people = Util.getPersons();
-//        Продолжить...
+        people.stream()
+                .filter(person -> "Male".equals(person.getGender()))
+                .filter(person -> Period.between(person.getDateOfBirth(), LocalDate.now()).getYears() >= 18)
+                .filter(person -> Period.between(person.getDateOfBirth(), LocalDate.now()).getYears() < 27)
+                .sorted(Comparator.comparing(Person::getRecruitmentGroup))
+                .limit(200)
+                .forEach(System.out::println);
     }
 
     private static void task13() throws IOException {
