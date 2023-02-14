@@ -88,7 +88,10 @@ public class Main {
 
     private static void task7() throws IOException {
         List<Animal> animals = Util.getAnimals();
-        //        animals.stream() Продолжить ...
+        System.out.println(
+                animals.stream()
+                        .noneMatch(animal -> animal.getOrigin().contains("Oceania"))
+        );
     }
 
     private static void task8() throws IOException {
