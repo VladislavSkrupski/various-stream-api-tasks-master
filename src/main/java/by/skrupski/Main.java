@@ -80,7 +80,10 @@ public class Main {
 
     private static void task6() throws IOException {
         List<Animal> animals = Util.getAnimals();
-        //        animals.stream() Продолжить ...
+        System.out.println(
+                animals.stream()
+                        .allMatch(animal -> "Male".equals(animal.getGender()) || "Female".equals(animal.getGender()))
+        );
     }
 
     private static void task7() throws IOException {
