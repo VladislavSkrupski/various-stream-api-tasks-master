@@ -116,7 +116,11 @@ public class Main {
 
     private static void task10() throws IOException {
         List<Animal> animals = Util.getAnimals();
-        //        animals.stream() Продолжить ...
+        System.out.println(
+                animals.stream()
+                        .mapToInt(Animal::getAge)
+                        .sum()
+        );
     }
 
     private static void task11() throws IOException {
