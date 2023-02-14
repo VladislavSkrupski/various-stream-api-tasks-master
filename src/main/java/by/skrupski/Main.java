@@ -8,6 +8,7 @@ import by.skrupski.model.Person;
 import by.skrupski.util.Util;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 public class Main {
@@ -31,7 +32,12 @@ public class Main {
 
     private static void task1() throws IOException {
         List<Animal> animals = Util.getAnimals();
-        //        animals.stream() Продолжить ...
+        animals.stream()
+                .filter(animal -> animal.getAge() >= 10 && animal.getAge() < 20)
+                .sorted(Comparator.comparingInt(Animal::getAge))
+                .skip(7 * 2)
+                .limit(7)
+                .forEach(System.out::println);
     }
 
     private static void task2() throws IOException {
