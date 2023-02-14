@@ -62,8 +62,11 @@ public class Main {
 
     private static void task4() throws IOException {
         List<Animal> animals = Util.getAnimals();
-        //        animals.stream() Продолжить ...
-
+        System.out.println(
+                animals.stream()
+                        .filter(animal -> "Female".equals(animal.getGender()))
+                        .count()
+        );
     }
 
     private static void task5() throws IOException {
