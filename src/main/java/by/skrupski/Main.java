@@ -106,7 +106,12 @@ public class Main {
 
     private static void task9() throws IOException {
         List<Animal> animals = Util.getAnimals();
-        //        animals.stream() Продолжить ...
+        animals.stream()
+                .map(Animal::getBread)
+                .map(String::toCharArray)
+                .map(chars -> chars.length)
+                .min(Integer::compare)
+                .ifPresent(System.out::println);
     }
 
     private static void task10() throws IOException {
