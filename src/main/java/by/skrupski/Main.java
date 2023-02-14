@@ -10,8 +10,13 @@ import by.skrupski.util.Util;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -147,7 +152,28 @@ public class Main {
 
     private static void task13() throws IOException {
         List<House> houses = Util.getHouses();
-        //        Продолжить...
+        Predicate<Person> isSecondQueuePerson = (person) -> {
+            int yearsOld = Period.between(person.getDateOfBirth(), LocalDate.now()).getYears();
+            return yearsOld < 18
+                    || (yearsOld >= 63 && "Male".equals(person.getGender()))
+                    || (yearsOld >= 58 && "Female".equals(person.getGender()));
+        };
+
+        Map<Boolean, List<Person>> recentPeople = houses.stream()
+                .filter(house -> !"Hospital".equals(house.getBuildingType()))
+                .map(House::getPersonList)
+                .flatMap(Collection::stream)
+                .collect(Collectors.partitioningBy(isSecondQueuePerson));
+
+        Stream<Person> firstQueuePeople = houses.stream()
+                .filter(house -> "Hospital".equals(house.getBuildingType()))
+                .map(House::getPersonList)
+                .flatMap(Collection::stream);
+        Stream<Person> secondQueuePeople = recentPeople.get(true).stream();
+        Stream<Person> thirdQueuePeople = recentPeople.get(false).stream();
+        Stream.concat(Stream.concat(firstQueuePeople, secondQueuePeople), thirdQueuePeople)
+                .limit(500)
+                .forEach(System.out::println);
     }
 
     private static void task14() throws IOException {
