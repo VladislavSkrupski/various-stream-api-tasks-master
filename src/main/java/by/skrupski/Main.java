@@ -19,21 +19,21 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-//        task1();
-//        task2();
-//        task3();
-//        task4();
-//        task5();
-//        task6();
-//        task7();
-//        task8();
-//        task9();
-//        task10();
-//        task11();
-//        task12();
-//        task13();
-//        task14();
-//        task15();
+        task1();
+        task2();
+        task3();
+        task4();
+        task5();
+        task6();
+        task7();
+        task8();
+        task9();
+        task10();
+        task11();
+        task12();
+        task13();
+        task14();
+        task15();
         task16();
     }
 
@@ -270,16 +270,34 @@ public class Main {
 
     private static void task16() throws IOException {
         List<Flower> flowers = Util.getFlowers();
-        List<String> vasesMaterials = flowers.stream()
+        Map<String, List<Flower>> vasesMaterials = flowers.stream()
                 .map(Flower::getFlowerVaseMaterial)
                 .flatMap(Collection::stream)
                 .distinct()
-                .toList();
+                .collect(Collectors.toMap(String::toString, v -> new ArrayList<>()));
         flowers.stream()
                 .filter(flower -> !flower.isShadePreferred())
-                .filter(flower -> flower.getPrice() == 1995)
-                .collect(Collectors.groupingBy(flower -> flower.getFlowerVaseMaterial().stream().map(s -> s)))
-                .entrySet().forEach(listListEntry -> System.out.println(listListEntry.getKey() + " " + listListEntry.getValue()));
-//                .forEach(System.out::println);
+                .forEach(flower -> {
+                    flower.getFlowerVaseMaterial().forEach(s -> {
+                        if (vasesMaterials.containsKey(s)) {
+                            vasesMaterials.get(s).add(flower);
+                        }
+                    });
+                });
+        System.out.println(
+                vasesMaterials.entrySet().stream()
+                        .mapToInt(stringListEntry -> {
+                            System.out.print(stringListEntry.getKey() + ": ");
+                            if (stringListEntry.getValue().isEmpty()) {
+                                System.out.println("0");
+                                return 0;
+                            } else {
+                                int sum = stringListEntry.getValue().stream()
+                                        .mapToInt(Flower::getPrice)
+                                        .sum();
+                                System.out.println(sum);
+                                return sum;
+                            }
+                        }).sum());
     }
 }
