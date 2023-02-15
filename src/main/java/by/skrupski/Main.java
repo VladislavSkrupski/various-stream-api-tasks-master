@@ -15,6 +15,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 public class Main {
     public static void main(String[] args) throws IOException {
         task1();
@@ -231,12 +233,12 @@ public class Main {
                 .map(carsInEchelons -> carsInEchelons.stream()
                         .map(Car::getMass)
                         .reduce(0, Integer::sum)
-                        .doubleValue() * 7.14)
+                        .doubleValue() / 1000 * 7.14)
                 .forEach(aDouble -> System.out.printf("%.2f\n", aDouble));
 
         System.out.printf("%.2f\n", echelons.stream()
                 .map(carsInEchelons -> carsInEchelons.stream()
-                        .map(car -> (car.getPrice() - car.getMass() * 7.14))
+                        .map(car -> (car.getPrice() - car.getMass() / 1000 * 7.14))
                         .reduce(0.0, Double::sum))
                 .reduce(0.0, Double::sum)
         );
@@ -244,6 +246,24 @@ public class Main {
 
     private static void task15() throws IOException {
         List<Flower> flowers = Util.getFlowers();
-        //        Продолжить...
+        System.out.printf("%.2f\n", flowers.stream()
+                .sorted(
+                        Comparator
+                                .comparing(Flower::getOrigin).reversed()
+                                .thenComparing(Flower::getPrice)
+                                .thenComparing(Flower::getWaterConsumptionPerDay).reversed()
+                )
+                .filter(flower -> flower.getCommonName().matches("^[C-S].*"))
+                .filter(Flower::isShadePreferred)
+                .filter(flower -> flower.getFlowerVaseMaterial().stream()
+                        .anyMatch(s -> List.of("Glass", "Aluminum", "Steel").contains(s)))
+                .mapToDouble(
+                        flower -> flower.getPrice()
+                                + 1.39
+                                * flower.getWaterConsumptionPerDay()
+                                / 1000
+                                * DAYS.between(LocalDate.now(), LocalDate.now().plusYears(5))
+                ).sum()
+        );
     }
 }
