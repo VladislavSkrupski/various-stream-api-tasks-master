@@ -229,18 +229,13 @@ public class Main {
                 });
 
         Collections.reverse(echelons);
-        echelons.stream()
-                .map(carsInEchelons -> carsInEchelons.stream()
+        System.out.printf("%.2f\n", echelons.stream()
+                .mapToDouble(carsInEchelons -> carsInEchelons.stream()
                         .map(Car::getMass)
                         .reduce(0, Integer::sum)
                         .doubleValue() / 1000 * 7.14)
-                .forEach(aDouble -> System.out.printf("%.2f\n", aDouble));
-
-        System.out.printf("%.2f\n", echelons.stream()
-                .map(carsInEchelons -> carsInEchelons.stream()
-                        .map(car -> (car.getPrice() - car.getMass() / 1000 * 7.14))
-                        .reduce(0.0, Double::sum))
-                .reduce(0.0, Double::sum)
+                .peek(aDouble -> System.out.printf("%.2f\n", aDouble))
+                .sum()
         );
     }
 
