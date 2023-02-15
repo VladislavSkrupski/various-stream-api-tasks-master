@@ -34,6 +34,7 @@ public class Main {
         task13();
         task14();
         task15();
+        task16();
     }
 
     private static void task1() throws IOException {
@@ -260,5 +261,38 @@ public class Main {
                                 * DAYS.between(LocalDate.now(), LocalDate.now().plusYears(5))
                 ).sum()
         );
+    }
+
+    private static void task16() throws IOException {
+        List<Flower> flowers = Util.getFlowers();
+        Map<String, List<Flower>> vasesMaterials = flowers.stream()
+                .map(Flower::getFlowerVaseMaterial)
+                .flatMap(Collection::stream)
+                .distinct()
+                .collect(Collectors.toMap(String::toString, v -> new ArrayList<>()));
+        flowers.stream()
+                .filter(flower -> !flower.isShadePreferred())
+                .forEach(flower -> {
+                    flower.getFlowerVaseMaterial().forEach(s -> {
+                        if (vasesMaterials.containsKey(s)) {
+                            vasesMaterials.get(s).add(flower);
+                        }
+                    });
+                });
+        System.out.println(
+                vasesMaterials.entrySet().stream()
+                        .mapToInt(stringListEntry -> {
+                            System.out.print(stringListEntry.getKey() + ": ");
+                            if (stringListEntry.getValue().isEmpty()) {
+                                System.out.println("0");
+                                return 0;
+                            } else {
+                                int sum = stringListEntry.getValue().stream()
+                                        .mapToInt(Flower::getPrice)
+                                        .sum();
+                                System.out.println(sum);
+                                return sum;
+                            }
+                        }).sum());
     }
 }
